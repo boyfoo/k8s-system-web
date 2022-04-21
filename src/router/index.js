@@ -56,6 +56,27 @@ export const constantRoutes = [
   },
 
   {
+    path: '/workloads',
+    component: Layout,
+    redirect: '/workloads/deployments',
+    name: 'Example',
+    meta: { title: '工作负载', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'deployments',
+        name: 'Deployments',
+        component: () => import('@/views/workloads/deplist'),
+        meta: { title: 'deployment 列表', icon: 'table' }
+      },
+      {
+        path: 'services',
+        name: 'Services',
+        component: () => import('@/views/workloads/svclist'),
+        meta: { title: 'service 列表', icon: 'tree' }
+      }
+    ]
+  },
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
