@@ -43,6 +43,7 @@ export const constantRoutes = [
     hidden: true
   },
 
+
   {
     path: '/',
     component: Layout,
@@ -54,7 +55,6 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
   {
     path: '/workloads',
     component: Layout,
@@ -66,37 +66,23 @@ export const constantRoutes = [
         path: 'deployments',
         name: 'Deployments',
         component: () => import('@/views/workloads/deplist'),
-        meta: { title: 'deployment 列表', icon: 'table' }
+        meta: { title: 'deployments列表', icon: 'table' }
       },
       {
-        path: 'services',
-        name: 'Services',
+        path: 'pods',
+        name: 'Pods',
+        component: () => import('@/views/workloads/podslist'),
+        meta: { title: 'Pods列表', icon: 'tree' }
+      },
+      {
+        path: 'serivces',
+        name: 'Serivces',
         component: () => import('@/views/workloads/svclist'),
-        meta: { title: 'service 列表', icon: 'tree' }
+        meta: { title: 'Service列表', icon: 'tree' }
       }
     ]
   },
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
+
 
   {
     path: '/form',

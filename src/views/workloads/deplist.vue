@@ -13,9 +13,15 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
+      <el-table-column label="状态" width="150" align="center">
+        <template slot-scope="scope">
+          <p v-html="getStatus(scope.row)"></p>
+        </template>
+      </el-table-column>
       <el-table-column label="名称" width="250" align="center">
         <template slot-scope="scope">
-          {{ scope.row.Name }}
+          <p>{{ scope.row.Name }}</p>
+          <p class="red">{{ getMessage(scope.row) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="命名空间" align="center" width="200">
@@ -25,7 +31,13 @@
       </el-table-column>
       <el-table-column label="镜像" align="center">
         <template slot-scope="scope">
-          {{ scope.row.Images }}
+          <p>{{ scope.row.Images }}</p>
+          <p><span class="green">总副本:{{ scope.row.Replicas[0]}}</span> / <span>可用副本:{{scope.row.Replicas[1] }}</span></p>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.CreateTime }}
         </template>
       </el-table-column>
     </el-table>
@@ -62,6 +74,18 @@ export default {
           this.$forceUpdate()
         }
       }
+    },
+    getStatus(row) {
+      if (row.IsComplete) {
+        return '<span>Active</span>'
+      }
+      return '<span>Waiting</span>'
+    },
+    getMessage(row) {
+      if (!row.IsComplete) {
+        return row.Message
+      }
+      return ''
     }
   }
 }
