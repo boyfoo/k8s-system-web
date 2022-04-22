@@ -1,27 +1,77 @@
 <template>
   <div>
-    <el-container v-for="item in nslist">
-      <el-header>{{ item.Name }}</el-header>
+    <el-container v-for="ns in nslist">
+      <el-header>{{ ns.Name }}</el-header>
       <el-main>
-        这里放表格
+        <el-table
+          :data="pods[ns.Name]"
+          border
+          fit
+          highlight-current-row
+        >
+          <el-table-column align="center" label="序号" width="95">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" align="center" width="90">
+            <template slot-scope="scope">
+              <p v-html="getStatus(scope.row.IsReady)"></p>
+            </template>
+          </el-table-column>
+          <el-table-column label="名称" align="center" width="350">
+            <template slot-scope="scope">
+              <p>{{ scope.row.Name }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="镜像" width="500" align="center">
+            <template slot-scope="scope">
+              <p>{{ scope.row.Images }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="创建时间" width="170" align="center">
+            <template slot-scope="scope">
+              {{ scope.row.CreateTime }}
+            </template>
+          </el-table-column>
+        </el-table>
       </el-main>
     </el-container>
   </div>
 
 </template>
 <script>
-import {getList} from "@/api/ns";
+import { getList } from '@/api/ns'
+import { getPodsByNs } from '@/api/pods'
 
 export default {
   data() {
     return {
-      nslist: null
+      nslist: null,
+      pods: {}
     }
   },
   created() {
     getList().then(response => {
       this.nslist = response.data
+      this.nslist.forEach(ns => {
+        this.loadPods(ns.Name)
+      })
     })
+  },
+  methods: {
+    loadPods(ns) {
+      getPodsByNs(ns).then(rsp => {
+        this.pods[ns] = rsp.data
+        this.$forceUpdate()
+      })
+    },
+    getStatus(isReady) {
+      if (isReady) {
+        return '<span class="green">active</span>'
+      }
+      return '<span class="red">waiting</span>'
+    }
   }
 }
 
