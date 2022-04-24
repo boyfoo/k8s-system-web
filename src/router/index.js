@@ -120,10 +120,17 @@ export const constantRoutes = [
         meta: { title: '密文列表', icon: 'table' }
       },
       {
-        path: 'secrets-create',
-        name: 'Secrets-create',
+        path: 'createsecret',
+        name: 'Createsecret',
         component: () => import('@/views/resources/secret-create'),
         meta: { title: '创建密文', icon: 'table' }
+      },
+      {
+        path: 'secretsget',
+        name: 'Secretsget',
+        component: () => import('@/views/resources/secret-get'),
+        meta: { title: '查看密文', icon: 'table' },
+        hidden: true
       },
       {
         path: 'configmaps',

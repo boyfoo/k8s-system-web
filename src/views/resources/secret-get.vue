@@ -5,28 +5,6 @@
      </div>
       <div style="text-align: center">
         <el-table
-          :data="ExtData"
-          border
-          v-show="ExtData.length>0"
-          style="width: 100%"
-        >
-          <el-table-column
-            label="Key名"
-            width="180">
-            <template slot-scope="scope">
-              <p>{{ scope.row.key }}</p>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="value值"
-            width="380">
-            <template slot-scope="scope">
-              <p>{{ scope.row.value }}</p>
-            </template>
-          </el-table-column>
-
-        </el-table>
-        <el-table
           :data="SecretData"
           border
           style="width: 100%"
@@ -60,7 +38,6 @@
     data(){
       return {
         SecretData:[],
-        ExtData:[],
         ns:"",
         name:""
       }
@@ -75,12 +52,6 @@
               {key,value:rsp.data.Data[key]}
             )
         }
-        for(let key in rsp.data.ExtData){
-          this.ExtData.push(
-            {key,value:rsp.data.ExtData[key]}
-          )
-        }
-
       })
     },
     methods:{
