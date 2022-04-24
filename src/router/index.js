@@ -59,7 +59,7 @@ export const constantRoutes = [
     path: '/workloads',
     component: Layout,
     redirect: '/workloads/deployments',
-    name: 'Example',
+    name: 'workloads',
     meta: { title: '工作负载', icon: 'el-icon-s-help' },
     children: [
       {
@@ -105,16 +105,33 @@ export const constantRoutes = [
 
     ]
   },
+
   {
-    path: '/form',
+    path: '/resources',
     component: Layout,
+    redirect: '/resources/secrets',
+    name: 'resources',
+    meta: { title: '资源管理', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
+        path: 'secrets',
+        name: 'Secrets',
+        component: () => import('@/views/resources/secretlist'),
+        meta: { title: '密文列表', icon: 'table' }
+      },
+      {
+        path: 'secrets-create',
+        name: 'Secrets-create',
+        component: () => import('@/views/resources/secret-create'),
+        meta: { title: '创建密文', icon: 'table' }
+      },
+      {
+        path: 'configmaps',
+        name: 'Configmaps',
+        component: () => import('@/views/resources/configmaplist'),
+        meta: { title: '配置列表', icon: 'tree' }
+      },
+
     ]
   },
 
@@ -177,16 +194,7 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
+
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
