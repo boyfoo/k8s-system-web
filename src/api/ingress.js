@@ -16,6 +16,14 @@ export function postIngress(data) {
     data
   })
 }
+export function rmIngress(ns,name) {
+  return request({
+    url: '/ingress?ns'+ns +'&name='+name,
+    method: 'delete',
+
+  })
+}
+
 
 
 

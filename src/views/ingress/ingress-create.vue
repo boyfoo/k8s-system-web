@@ -16,9 +16,22 @@
                      :value="ns.Name"/>
         </el-select>
         </el-form-item>
-
-
       </el-form>
+    </el-card>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>标签设置</span>
+      </div>
+      <div>
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="annotations">
+        </el-input>
+      </div>
+      <Cros ref="cros"></Cros>
+      <Rewrite ref="rewrite"></Rewrite>
     </el-card>
     <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -68,6 +81,8 @@
   import { postIngress } from '@/api/ingress'
   import { getList  as getNsList } from '@/api/ns'
   import { getList  as getSvcList } from '@/api/svc'
+  import Cros from './ingress-cros'
+  import Rewrite from './ingress-rewrite'
  export default {
    data(){
      return {
@@ -78,7 +93,8 @@
         ],
         nslist:[] , //ns列表
         svclist:[], // service 列表
-        errorMsg: "" //错误信息
+        errorMsg: "", //错误信息,
+        annotations:"" //标签
      }
    },
    created(){
@@ -122,7 +138,18 @@
        })
      },
      postNew(){ //新增ingress
-       const data={Name:this.name,Namespace:this.namespace,Rules:this.rules}
+       //把各个组件的 annotations值  累加
+     // let annotations = this.annotations + this.$refs.cros.output()
+       let annotations = this.annotations
+       for(let ref in this.$refs){
+         annotations+=this.$refs[ref].output()
+       }
+       const data={Name:this.name,
+                   Namespace:this.namespace,
+                   Rules:this.rules,
+                   Annotations:annotations,
+                    }
+
        postIngress(data)
          .then((rsp)=>{
            //console.log(rsp.data)
@@ -137,6 +164,9 @@
        })
 
      }
+   },
+   components:{
+     Cros,Rewrite
    }
 
  }
