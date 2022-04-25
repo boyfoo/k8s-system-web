@@ -15,9 +15,9 @@
             <el-input   v-model="item.key"></el-input>
           </el-form-item>
           <el-form-item label="value">
-            <el-input style="width:300px" type="textarea"  v-model="item.value"></el-input>
+            <el-input type="textarea"  v-model="item.value"></el-input>
           </el-form-item>
-          <el-button   @click="rmKV(itemindex)" type="primary" icon="el-icon-minus" circle></el-button>
+          <el-button v-show="itemindex>0" @click="rmKV(itemindex)" type="primary" icon="el-icon-minus" circle></el-button>
         </el-form>
         <el-button type="primary" @click="addKV" icon="el-icon-plus"  >添加配置</el-button>
 
@@ -107,7 +107,7 @@
          console.log(postData)
          postConfigMap(postModel)
            .then(rsp=>{
-             alert("保存成功")
+             alert("创建成功")
            }).
            catch((error)=>{
            if(error.response){
