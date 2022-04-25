@@ -130,7 +130,7 @@ export const constantRoutes = [
         name: 'Secretsget',
         component: () => import('@/views/resources/secret-get'),
         meta: { title: '查看密文', icon: 'table' },
-        hidden: true
+        hidden:true
       },
       {
         path: 'configmaps',
