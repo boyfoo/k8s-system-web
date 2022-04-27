@@ -78,7 +78,8 @@ export const constantRoutes = [
         path: 'podlogs',
         name: 'Podlogs',
         component: () => import('@/views/workloads/podlogs'),
-        meta: { title: '查看logs', icon: 'tree' }
+        meta: { title: '查看logs', icon: 'tree' },
+        hidden:true
       },
       {
         path: 'podshell',
@@ -91,11 +92,34 @@ export const constantRoutes = [
         path: 'serivces',
         name: 'Serivces',
         component: () => import('@/views/workloads/svclist'),
-        meta: { title: 'Service列表', icon: 'tree' }
+        meta: { title: 'Service列表', icon: 'tree' },
+        hidden:true
       }
     ]
   },
 
+  {
+    path: '/nodes',
+    component: Layout,
+    redirect: '/nodes/nodeshell',
+    name: 'nodes',
+    meta: { title: '节点管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'nodeshell',
+        name: 'Nodeshell',
+        component: () => import('@/views/nodes/nodeshell'),
+        meta: { title: 'nodeshell(临时)', icon: 'table' }
+      },
+      {
+        path: 'nodelist',
+        name: 'Nodelist',
+        component: () => import('@/views/nodes/nodelist'),
+        meta: { title: '节点列表', icon: 'tree' }
+      },
+
+    ]
+  },
   {
     path: '/ingress',
     component: Layout,
@@ -157,9 +181,6 @@ export const constantRoutes = [
         component: () => import('@/views/resources/configmap-create'),
         meta: { title: '创建配置', icon: 'tree' }
       }
-
-
-
     ]
   },
 
