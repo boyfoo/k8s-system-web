@@ -16,9 +16,10 @@
       <el-table-column label="名称" width="350">
         <template slot-scope="scope">
           <p>{{ scope.row.Name }} <br/>
-          <span style="color: gray">{{scope.row.IP}}/{{scope.row.HostName}}</span>
+            <span style="color: gray">{{scope.row.IP}}/{{scope.row.HostName}}</span>
+            <br/>
+            <el-tag type="success" v-for="label in scope.row.Lables">{{label}}</el-tag>
           </p>
-
         </template>
       </el-table-column>
 
@@ -27,23 +28,27 @@
           {{ scope.row.CreateTime }}
         </template>
       </el-table-column>
+      <el-table-column label="操作" width="100" align="center">
+        <template slot-scope="scope">
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 <script>
-  import { getList } from '@/api/nodes'
-  import { NewClient } from "@/utils/ws";
-  export default {
-    data(){
-      return {
-        list: null,
-        listLoading: true,
-        wsClient:null
-      }
-    },
-    created() {
-      this.fetchData()
-    },
+import { getList } from '@/api/nodes'
+import { NewClient } from "@/utils/ws";
+export default {
+  data(){
+    return {
+      list: null,
+      listLoading: true,
+      wsClient:null
+    }
+  },
+  created() {
+    this.fetchData()
+  },
   methods: {
     fetchData()
     {
@@ -66,7 +71,7 @@
       }
 
     }
-  ,
+    ,
   }
-  }
+}
 </script>
