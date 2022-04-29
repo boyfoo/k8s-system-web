@@ -7,3 +7,18 @@ export function getList() {
     method: 'get',
   })
 }
+//获取node详细
+export function getDetail(nodeName) {
+  return request({
+    url: '/nodes/'+ nodeName,
+    method: 'get',
+  })
+}
+//保存 一下
+export function saveNode(data) {
+  return request({
+    url: '/nodes',
+    data,
+    method: 'post',
+  })
+}

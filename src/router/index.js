@@ -78,8 +78,7 @@ export const constantRoutes = [
         path: 'podlogs',
         name: 'Podlogs',
         component: () => import('@/views/workloads/podlogs'),
-        meta: { title: '查看logs', icon: 'tree' },
-        hidden:true
+        meta: { title: '查看logs', icon: 'tree' }
       },
       {
         path: 'podshell',
@@ -92,8 +91,7 @@ export const constantRoutes = [
         path: 'serivces',
         name: 'Serivces',
         component: () => import('@/views/workloads/svclist'),
-        meta: { title: 'Service列表', icon: 'tree' },
-        hidden:true
+        meta: { title: 'Service列表', icon: 'tree' }
       }
     ]
   },
@@ -109,7 +107,8 @@ export const constantRoutes = [
         path: 'nodeshell',
         name: 'Nodeshell',
         component: () => import('@/views/nodes/nodeshell'),
-        meta: { title: 'nodeshell(临时)', icon: 'table' }
+        meta: { title: 'nodeshell(临时)', icon: 'table' },
+        hidden:true
       },
       {
         path: 'nodelist',
@@ -117,7 +116,13 @@ export const constantRoutes = [
         component: () => import('@/views/nodes/nodelist'),
         meta: { title: '节点列表', icon: 'tree' }
       },
-
+      {
+        path: 'nodedetail',
+        name: 'Nodedetail',
+        component: () => import('@/views/nodes/nodedetail'),
+        meta: { title: '节点编辑', icon: 'tree' },
+        hidden: true
+      },
     ]
   },
   {
@@ -180,7 +185,16 @@ export const constantRoutes = [
         name: 'CreateConfigmaps',
         component: () => import('@/views/resources/configmap-create'),
         meta: { title: '创建配置', icon: 'tree' }
-      }
+      },
+      {
+        path: 'testres',
+        name: 'testres',
+        component: () => import('@/views/resources/test'),
+        meta: { title: '测试', icon: 'tree' }
+      },
+
+
+
     ]
   },
 

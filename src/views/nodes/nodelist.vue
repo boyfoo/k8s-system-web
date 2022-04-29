@@ -26,12 +26,12 @@
       </el-table-column>
       <el-table-column label="CPU" width="100" align="center">
         <template slot-scope="scope">
-          {{ scope.row.Capacity.Cpu }}核
+          {{ Math.round(scope.row.Usage.Cpu*100) }}% / {{ scope.row.Capacity.Cpu }}核
         </template>
       </el-table-column>
       <el-table-column label="内存" width="100" align="center">
         <template slot-scope="scope">
-          {{ Math.round(scope.row.Capacity.Memory/1000/1000/1000) }}G
+          {{ Math.round(scope.row.Usage.Memory*100) }}% / {{ Math.round(scope.row.Capacity.Memory/1000/1000/1000) }}G
         </template>
       </el-table-column>
       <el-table-column label="Pods" width="100" align="center">
@@ -47,6 +47,11 @@
 
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
+          <router-link icon="el-icon-edit" :to="{name:'Nodedetail',
+              params:{node:scope.row.Name}}"><el-link >编辑<i class="el-icon-edit-outline"></i></el-link></router-link>
+
+          <router-link :to="{name:'Nodeshell',
+              params:{node:scope.row.Name}}"> <el-link  >远程<i class="el-icon-s-platform el-icon--right"></i></el-link></router-link>
        </template>
       </el-table-column>
     </el-table>
