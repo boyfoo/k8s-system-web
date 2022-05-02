@@ -110,6 +110,13 @@ export const constantRoutes = [
         meta: { title: '角色列表', icon: 'table' },
       },
       {
+        path: 'rolebindinglist',
+        name: 'Rolebindinglist',
+        component: () => import('@/views/rbac/rolebindinglist'),
+        meta: { title: '角色绑定', icon: 'tree' },
+
+      },
+      {
         path: 'clusterrolelist',
         name: 'Clusterrolelist',
         component: () => import('@/views/rbac/clusterrolelist'),
@@ -121,6 +128,7 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/create-role'),
         meta: { title: '创建/编辑角色', icon: 'tree' }
       },
+
 
     ]
   },
@@ -171,7 +179,7 @@ export const constantRoutes = [
         name: 'Createingress',
         component: () => import('@/views/ingress/ingress-create'),
         meta: { title: '创建ingress', icon: 'tree' }
-      }
+      },
       // {
       //   path: 'ingressyaml',
       //   name: 'Ingressyaml',

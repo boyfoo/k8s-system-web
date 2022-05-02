@@ -25,6 +25,7 @@
           <el-form-item>
             <el-select
               v-model="rule.groupversion"
+              allow-create
               filterable
               default-first-option
               placeholder="Api组" @change="(v)=>selectChanged(v,ruleindex)">
@@ -46,6 +47,8 @@
           <el-form-item>
             <el-select style="width: 300px"
               v-model="rule.verbs"
+               allow-create
+                filterable
               multiple
               placeholder="权限">
               <el-option v-for="v in rule.verbscopy"
@@ -66,6 +69,7 @@
 <script>
   import { getList  as getNsList } from '@/api/ns'
   import {getResources} from "@/api/resources";
+   import {createRole} from "@/api/rbac";
 
   export default {
     data(){
@@ -77,7 +81,9 @@
           {groupversion:'',verbs:[],verbscopy:[]}
         ],
         //提交用的
-        postRules:[],
+        postRules:[
+          //{apiGroups:[],resources:[],verbs:[]}
+        ],
         resources:[] //从后端 请求 /resources 得到所有 group 和 资源 列表
       }
     },
@@ -97,7 +103,6 @@
       selectChanged(v,index){
          // v 包含了  group 和 resourcename .需要拆开 ,然后去 resource对象中寻找verbs
         var gv=v.split(':')
-        console.log(gv)
         var verbs=[]
         this.resources.forEach((item)=>{
           if(item.Group===gv[0]){
@@ -108,7 +113,6 @@
              })
           }
         })
-        console.log(verbs)
         this.rules[index].verbs=[]
         this.rules[index].verbscopy=verbs
 
@@ -116,8 +120,27 @@
       rmRule(index){
         this.rules.splice(index,1)
       },
+      //拼接
+      concatRules(){
+        // 合并成这样:{apiGroups:[],resources:[],verbs:[]}
+        this.postRules=[]
+          this.rules.forEach((rule)=>{
+            var gv=rule.groupversion.split(':')  //切割 。 第一段group 第二段 resourcename，如果碰到是core ，则就是空字符串
+            var g=gv[0]
+            var v=gv[1]
+            if(g==="core")
+              g=""
+            this.postRules.push({apiGroups:[g],resources:[v],verbs:rule.verbs})
+          })
+      },
       saveRole(){
-        console.log(this.rules)
+        this.concatRules() //拼接rule对象
+        const postData={metadata:{name:this.Name,namespace:this.NameSpace},rules:this.postRules}
+        console.log(postData)
+        createRole(postData).then(rsp=>{
+          alert("成功")
+        })
+
       }
     }
 

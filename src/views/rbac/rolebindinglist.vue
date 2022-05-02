@@ -22,10 +22,12 @@
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
-      <el-table-column label="角色名" width="350">
+      <el-table-column label="绑定名称" width="350">
         <template slot-scope="scope">
-          <p>{{ scope.row.Name }} </p>
-
+          <p>{{ scope.row.Name }}  </p>
+          <p>
+            <el-tag closable :type="getType(sub.kind)" v-for="sub in scope.row.Subject">{{sub.name}}({{sub.kind}})</el-tag>
+          </p>
 
         </template>
       </el-table-column>
@@ -41,19 +43,17 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="200" align="center">
+      <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-           <i @click="()=>rmRole(scope.row.NameSpace,scope.row.Name )" class="el-icon-delete" > 删除</i>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <router-link :to="{name:'Rolebindinglist',
-              params:{ns:scope.row.NameSpace,role:scope.row.Name}}"> <el-link  >绑定<i class="el-icon-user"></i></el-link></router-link>
+           <i @click="()=>rmRoleBinding(scope.row.NameSpace,scope.row.Name )" class="el-icon-delete" > 删除</i>
+
         </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 <script>
-  import { getRoleList,deleteRole } from '@/api/rbac'
+  import { getRoleBindingList,deleteRole } from '@/api/rbac'
   import { NewClient } from "@/utils/ws";
   import { getList  as getNsList } from '@/api/ns'
   export default {
@@ -61,7 +61,6 @@
       return {
         list: null,
         listLoading: true,
-        wsClient:null,
         namespace: 'default',
         nslist:[] , //ns列表
       }
@@ -74,27 +73,23 @@
 
     },
   methods: {
-      rmRole(ns,name){
-        this.$confirm('是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          deleteRole(ns,name)
-        })
-
+      getType(kind){
+        if(kind==="User"){
+          return "info"
+        }
+        return "warning"
       },
     changeNs(ns){
-      getRoleList(ns).then(rsp=>{
-        this.list=rsp.data
+      getRoleBindingList(this.namespace).then(response => {
+        this.list = response.data
+        this.listLoading = false
       })
     },
     fetchData()
     {
       this.listLoading = true
       // 通过rest api 获取
-      getRoleList(this.namespace).then(response => {
+      getRoleBindingList(this.namespace).then(response => {
         this.list = response.data
         this.listLoading = false
       })
@@ -102,7 +97,7 @@
       this.wsClient.onmessage = (e) => {
         if (e.data !== 'ping') {
           const object = JSON.parse(e.data)
-          if (object.type === 'role') {
+          if (object.type === 'rolebinding') {
             this.list = object.result.data
             this.$forceUpdate()
           }
