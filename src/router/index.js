@@ -97,6 +97,34 @@ export const constantRoutes = [
   },
 
   {
+    path: '/rbac',
+    component: Layout,
+    redirect: '/rbac/rolelist',
+    name: 'rbac',
+    meta: { title: 'RBAC可视化管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'rolelist',
+        name: 'Rolelist',
+        component: () => import('@/views/rbac/rolelist'),
+        meta: { title: '角色列表', icon: 'table' },
+      },
+      {
+        path: 'clusterrolelist',
+        name: 'Clusterrolelist',
+        component: () => import('@/views/rbac/clusterrolelist'),
+        meta: { title: '集群角色列表', icon: 'tree' }
+      },
+      {
+        path: 'createrole',
+        name: 'Createrole',
+        component: () => import('@/views/rbac/create-role'),
+        meta: { title: '创建/编辑角色', icon: 'tree' }
+      },
+
+    ]
+  },
+  {
     path: '/nodes',
     component: Layout,
     redirect: '/nodes/nodeshell',
@@ -108,7 +136,7 @@ export const constantRoutes = [
         name: 'Nodeshell',
         component: () => import('@/views/nodes/nodeshell'),
         meta: { title: 'nodeshell(临时)', icon: 'table' },
-        hidden:true
+        hidden: true
       },
       {
         path: 'nodelist',
@@ -143,7 +171,14 @@ export const constantRoutes = [
         name: 'Createingress',
         component: () => import('@/views/ingress/ingress-create'),
         meta: { title: '创建ingress', icon: 'tree' }
-      },
+      }
+      // {
+      //   path: 'ingressyaml',
+      //   name: 'Ingressyaml',
+      //   component: () => import('@/views/ingress/ingress-yaml'),
+      //   meta: { title: 'ingressyaml', icon: 'tree' },
+      //   hidden: true
+      // },
 
     ]
   },
@@ -198,64 +233,7 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
+
 
 
 
