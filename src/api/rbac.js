@@ -22,6 +22,29 @@ export function getSaList(ns) {
     method: 'get',
   })
 }
+//获取服务账号列表
+export function getUaList() {
+  return request({
+    url: '/ua',
+    method: 'get',
+  })
+}
+//创建UserAccount
+export function createUa(data) {
+  return request({
+    url: '/ua',
+    data,
+    method: 'post',
+  })
+}
+export function deleteUa(data) {
+  return request({
+    url: '/ua',
+    data,
+    method: 'delete',
+  })
+}
+
 
 export function getRoleDetail(ns,name) {
   return request({

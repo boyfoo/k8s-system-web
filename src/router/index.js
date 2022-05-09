@@ -154,6 +154,12 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/salist'),
         meta: { title: '服务账号列表', icon: 'tree' },
       },
+      {
+        path: 'ualist',
+        name: 'Ualist',
+        component: () => import('@/views/rbac/ualist'),
+        meta: { title: '用户账号列表', icon: 'tree' },
+      },
 
 
     ]
