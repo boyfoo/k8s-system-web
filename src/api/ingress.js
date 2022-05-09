@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function genAuthFile(data) {
+  return request({
+    url: '/ingressauth',
+    data,
+    method: 'post',
+  })
+}
 //获取所有 ingress列表
 export function getList(ns) {
   return request({
@@ -21,6 +28,12 @@ export function rmIngress(ns,name) {
     url: '/ingress?ns'+ns +'&name='+name,
     method: 'delete',
 
+  })
+}
+export function getIngressForYaml(ns,name) {
+  return request({
+    url: '/ingressyaml?ns'+ns +'&name='+name,
+    method: 'get',
   })
 }
 

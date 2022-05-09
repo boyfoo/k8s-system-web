@@ -3,18 +3,16 @@ import request from '@/utils/request'
 //获取所有 secrets列表
 export function getList(ns) {
   return request({
-    url: '/secrets?ns=' + ns,
+    url: '/secrets?ns=' + ns ,
     method: 'get',
   })
 }
-
-export function rmSecret(ns, name) {
+export function rmSecret(ns,name) {
   return request({
-    url: '/secrets?ns' + ns + '&name=' + name,
+    url: '/secrets?ns'+ns +'&name='+name,
     method: 'delete',
   })
 }
-
 export function postSecret(data) {
   return request({
     url: '/secrets',
@@ -22,11 +20,15 @@ export function postSecret(data) {
     data
   })
 }
-
-export function getSecret(ns, name) {
+// 获取详细
+export function getSecret(ns,name) {
   return request({
-    url: '/secrets/' + ns + '/' + name,
-    method: 'get'
+    url: '/secrets/' +ns +'/'+name,
+    method: 'get',
   })
 }
+
+
+
+
 

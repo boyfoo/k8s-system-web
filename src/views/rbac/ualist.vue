@@ -48,7 +48,9 @@
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
            <i @click="()=>rmUser(scope.row.Name )" class="el-icon-delete" > 删除</i>
-          &nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;  <router-link icon="el-icon-edit" :to="{name:'Configyaml',
+              params:{user:scope.row.Name}}"><el-link >生成配置<i class="el-icon-setting"></i></el-link>
+        </router-link>
 
         </template>
       </el-table-column>
@@ -56,7 +58,7 @@
   </div>
 </template>
 <script>
-  import {  getUaList,createUa,deleteUa } from '@/api/rbac'
+  import {  getUaList,createUa,deleteUa,genConfigFile } from '@/api/rbac'
 
 
   export default {
@@ -76,7 +78,15 @@
 
     },
   methods: {
+    // 生成config配置
+    genConfig(user){
+      genConfigFile(user).then(rsp=>{
+        this.$alert('<pre>'+rsp.data+'</pre>', 'config内容', {
+          confirmButtonText: '确定',
 
+        });
+      })
+    },
       createUser(){
         createUa({cn:this.postUser.Name,o:this.postUser.Group}).then(rsp=>{
             this.fetchData()

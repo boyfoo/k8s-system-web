@@ -24,3 +24,4 @@ export function getPodsLogs(ns,podname,cname) {
 }
 
 
+

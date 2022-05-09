@@ -160,7 +160,13 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/ualist'),
         meta: { title: '用户账号列表', icon: 'tree' },
       },
-
+      {
+        path: 'configyaml',
+        name: 'Configyaml',
+        component: () => import('@/views/rbac/config-yaml'),
+        meta: { title: '查看config文件', icon: 'tree' },
+        hidden: true
+      },
 
     ]
   },

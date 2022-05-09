@@ -1,4 +1,13 @@
 import request from '@/utils/request'
+//生成config文件
+export function genConfigFile(user) {
+  return request({
+    url: '/clientconfig?user='+user,
+    method: 'get',
+  })
+}
+
+
 
 //删除clusterrole
 export function deleteClusterRole(name) {
