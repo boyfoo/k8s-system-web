@@ -1,13 +1,8 @@
 <template>
   <div>
     <div style="padding: 20px">
-      选择命名空间:
-      <el-select placeholder="选择命名空间" @change="changeNs" v-model="namespace">
-        <el-option v-for="ns in nslist "
-                   :label="ns.Name"
-                   :value="ns.Name"/>
-      </el-select>
-    <el-button type="primary" @click="$router.push({name:'Createrolebinding'})" >创建绑定</el-button>
+
+    <el-button type="primary" @click="$router.push({name:'Createclusterrolebinding'})" >创建绑定</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -24,15 +19,15 @@
       </el-table-column>
       <el-table-column label="角色/绑定名称" width="350">
         <template slot-scope="scope">
-          <p><span class="role">角色:</span>{{ scope.row.RoleRef.name }}</p>
-          <p><span class="role">绑定名:</span>{{ scope.row.Name }}
-            <i class=" el-icon-circle-plus" @click="()=>showAdd(scope.$index,scope.row.NameSpace,scope.row.Name)"  ></i>
+          <p><span class="role">角色:</span>{{ scope.row.roleRef.name }}</p>
+          <p><span class="role">绑定名:</span>{{ scope.row.metadata.name }}
+            <i class=" el-icon-circle-plus" @click="()=>showAdd(scope.$index,scope.row.metadata.name)"  ></i>
           </p>
           <p>
             <el-tag class="ii" closable
                     :type="getType(sub.kind)"
-                    v-for="sub in scope.row.Subject"
-                    @close="rmUserFromBinding(scope.row.NameSpace,scope.row.Name,sub.kind,sub.name)"
+                    v-for="sub in scope.row.subjects"
+                    @close="rmUserFromBinding(scope.row.metadata.name,sub.kind,sub.name)"
             >
               {{sub.name}}({{sub.kind}})</el-tag>
           </p>
@@ -40,6 +35,7 @@
             <el-select v-model="addConfig.kind" style="width:80px;height:30px!important;">
               <el-option label="User" value="User"/>
               <el-option label="ServiceAccount" value="ServiceAccount"/>
+              <el-option label="Group" value="Group"/>
             </el-select>
             <el-input placeholder="输入用户名" v-model="addConfig.name" style="width: 100px"></el-input>
             <i  class="ii el-icon-s-claim" @click="appendUserToBinding" > 保存</i>
@@ -49,21 +45,17 @@
 
         </template>
       </el-table-column>
-      <el-table-column label="命名空间" width="100" align="center">
-        <template slot-scope="scope">
-          <p>{{ scope.row.NameSpace }}  </p>
-        </template>
-      </el-table-column>
+
 
       <el-table-column label="创建时间" width="100" align="center">
         <template slot-scope="scope">
-          {{ scope.row.CreateTime }}
+          {{ scope.row.metadata.creationTimestamp }}
         </template>
       </el-table-column>
 
       <el-table-column label="操作" width="100" align="center">
         <template slot-scope="scope">
-           <i @click="()=>rmRoleBinding(scope.row.NameSpace,scope.row.Name )" class="el-icon-delete" > 删除</i>
+           <i @click="()=>rmRoleBinding(scope.row.metadata.name )" class="el-icon-delete" > 删除</i>
 
         </template>
       </el-table-column>
@@ -71,9 +63,9 @@
   </div>
 </template>
 <script>
-  import { getRoleBindingList,deleteRole,deleteRoleBinding,addUserToBinding ,deleteUserFromBinding} from '@/api/rbac'
+  import { getClusterRoleBindingList,deleteClusterRoleBinding,addUserToClusterBinding ,deleteUserFromClusterBinding} from '@/api/rbac'
   import { NewClient } from "@/utils/ws";
-  import { getList  as getNsList } from '@/api/ns'
+
   const apiGroup='rbac.authorization.k8s.io'
   export default {
     data(){
@@ -87,80 +79,76 @@
           kind:'User',
           name:'',//用户名
           bindingname:'', //binding名称
-          ns:'' //命名空间
+          ns:'' //命名空间   这里并没啥用
         }
       }
     },
     created() {
-      getNsList().then(rsp=>{
-        this.nslist=rsp.data
-      })
       this.fetchData()
     },
   methods: {
-      showAdd(index,ns,bdname){
+      showAdd(index,bdname){
         this.addConfig.index=index
-        this.addConfig.ns=ns
         this.addConfig.bindingname=bdname
       },
-    rmUserFromBinding(ns,bdname,kind,username){
+    rmUserFromBinding(bdname,kind,username){
       this.$confirm('是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         center: true
       }).then(() => {
-        deleteUserFromBinding(ns,bdname,{kind,name:username,apiGroup})
+        console.log(bdname,kind,username)
+       deleteUserFromClusterBinding(bdname,{kind,name:username,apiGroup})
       })
     },
     appendUserToBinding(){
         const {ns,bindingname,kind,name}=this.addConfig
       //构建出一个subject
-       addUserToBinding(ns,bindingname,{kind,name,apiGroup}).then(rsp=>{
+      addUserToClusterBinding(bindingname,{kind,name,apiGroup}).then(rsp=>{
          this.addConfig.index=-1
          this.addConfig.name=''
        })
 
     },
-      rmRoleBinding(ns,name){
+      rmRoleBinding(name){
         this.$confirm('是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           center: true
         }).then(() => {
-          deleteRoleBinding(ns,name)
+
+          deleteClusterRoleBinding(name)
         })
       },
       getType(kind){
         if(kind==="User"){
           return "info"
         }
+        if(kind==="Group"){
+          return "success"
+        }
         return "warning"
       },
-    changeNs(ns){
-      getRoleBindingList(this.namespace).then(response => {
-        this.list = response.data
-        this.listLoading = false
-      })
-    },
+
     fetchData()
     {
       this.listLoading = true
       // 通过rest api 获取
-      getRoleBindingList(this.namespace).then(response => {
+      getClusterRoleBindingList().then(response => {
         this.list = response.data
+
         this.listLoading = false
       })
       this.wsClient = NewClient()
       this.wsClient.onmessage = (e) => {
         if (e.data !== 'ping') {
           const object = JSON.parse(e.data)
-          if (object.type === 'rolebinding' && object.result.ns===this.namespace) {
+          if (object.type === 'clusterrolebinding') {
             this.list = object.result.data
             this.$forceUpdate()
           }
-
         }
       }
 

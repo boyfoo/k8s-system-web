@@ -22,23 +22,24 @@
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
-      <el-table-column label="角色名" width="350">
+      <el-table-column label="账号名称" width="350">
         <template slot-scope="scope">
-          <p><router-link :to="{name:'Createrole',
-              params:{ns:scope.row.NameSpace,name:scope.row.Name}}">{{ scope.row.Name }}</router-link> </p>
+          <p>{{ scope.row.metadata.name }}
+            <i class="el-icon-paperclip" @click="()=>showToken(scope.row.secrets[0].name )"> </i>
+          </p>
 
 
         </template>
       </el-table-column>
       <el-table-column label="命名空间" width="100" align="center">
         <template slot-scope="scope">
-          <p>{{ scope.row.NameSpace }}  </p>
+          <p>{{ scope.row.metadata.namespace }}  </p>
         </template>
       </el-table-column>
 
       <el-table-column label="创建时间" width="100" align="center">
         <template slot-scope="scope">
-          {{ scope.row.CreateTime }}
+          {{ scope.row.metadata.creationTimestamp  }}
         </template>
       </el-table-column>
 
@@ -46,17 +47,18 @@
         <template slot-scope="scope">
            <i @click="()=>rmRole(scope.row.NameSpace,scope.row.Name )" class="el-icon-delete" > 删除</i>
           &nbsp;&nbsp;&nbsp;&nbsp;
-          <router-link :to="{name:'Rolebindinglist',
-              params:{ns:scope.row.NameSpace,role:scope.row.Name}}"> <el-link  >绑定<i class="el-icon-user"></i></el-link></router-link>
+
         </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 <script>
-  import { getRoleList,deleteRole } from '@/api/rbac'
+  import {  getSaList } from '@/api/rbac'
   import { NewClient } from "@/utils/ws";
   import { getList  as getNsList } from '@/api/ns'
+  import { getSecret} from "@/api/secrets";
+
   export default {
     data(){
       return {
@@ -75,6 +77,18 @@
 
     },
   methods: {
+      showToken(name){
+        getSecret(this.namespace,name).then(rsp=>{
+
+            let token=rsp.data.Data["token"]
+
+          this.$alert(window.atob(token), name, {
+            confirmButtonText: '确定',
+
+          });
+        })
+
+      },
       rmRole(ns,name){
         this.$confirm('是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -87,7 +101,7 @@
 
       },
     changeNs(ns){
-      getRoleList(ns).then(rsp=>{
+      getSaList(ns).then(rsp=>{
         this.list=rsp.data
       })
     },
@@ -95,15 +109,16 @@
     {
       this.listLoading = true
       // 通过rest api 获取
-      getRoleList(this.namespace).then(response => {
+      getSaList(this.namespace).then(response => {
         this.list = response.data
+        console.log(this.list)
         this.listLoading = false
       })
       this.wsClient = NewClient()
       this.wsClient.onmessage = (e) => {
         if (e.data !== 'ping') {
           const object = JSON.parse(e.data)
-          if (object.type === 'role') {
+          if (object.type === 'sa' &&  object.result.ns===this.namespace) {
             this.list = object.result.data
             this.$forceUpdate()
           }

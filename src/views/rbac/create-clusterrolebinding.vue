@@ -7,18 +7,11 @@
           <el-form-item label="绑定名称">
             <el-input v-model="metadata.name"></el-input>
           </el-form-item>
-          <el-form-item label="命名空间">
-            <el-select  v-model="metadata.namespace" @change="changeNs">
-              <el-option v-for="ns in nslist "
-                         :label="ns.Name"
-                         :value="ns.Name"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="选择角色">
-            <el-select  v-model="roleRef.name">
-              <el-option v-for="role in rolelist "
-                         :label="role.Name"
-                         :value="role.Name"/>
+          <el-form-item label="选择集群角色">
+            <el-select  filterable  v-model="roleRef.name">
+              <el-option v-for="role in clusterrolelist "
+                         :label="role.metadata.name"
+                         :value="role.metadata.name"/>
             </el-select>
           </el-form-item>
         </el-form>
@@ -40,11 +33,14 @@
                 label="ServiceAccount"
                 value="ServiceAccount" >
               </el-option>
-
+              <el-option
+                label="Group"
+                value="Group" >
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-             <el-input placeholder="输入用户名" v-model="sub.name"/>
+             <el-input placeholder="输入用户名/组名" v-model="sub.name"/>
           </el-form-item>
           <el-button type="primary" v-show="subindex>0"  @click="rmSubject(subindex)">
             <i class="el-icon-minus"  ></i></el-button>
@@ -56,37 +52,29 @@
   </div>
 </template>
 <script>
-  import { getList  as getNsList } from '@/api/ns'
   import {getResources} from "@/api/resources";
-   import {getRoleList,createRoleBinding} from "@/api/rbac";
+   import {getClusterRoleList,createClusterRoleBinding} from "@/api/rbac";
 
     const apiGroup='rbac.authorization.k8s.io'
   export default {
     data(){
       return {
-        metadata:{name:"",namespace:"default"},
-        nslist: [],
-        rolelist:[],//切换ns后 填充角色列表
-        roleRef:{apiGroup,kind:"Role",name:""},
+        metadata:{name:""},
+        clusterrolelist:[] ,
+        roleRef:{apiGroup,kind:"ClusterRole",name:""},
         subjects:[  //前端所使用的rule
           {apiGroup,kind:'User',name:''}
         ],
       }
     },
-    created() {
-      getNsList().then(rsp=>{
-        this.nslist=rsp.data
-        this.loadRolelist()
-      })
+    created(){
+      this.loadRolelist()
     },
     methods:{
-      changeNs(ns){
-        this.roleRef.name=''
-        this.loadRolelist()
-      },
+
      loadRolelist(){
-       getRoleList(this.metadata.namespace).then(rsp=>{
-          this.rolelist=rsp.data
+       getClusterRoleList().then(rsp=>{
+          this.clusterrolelist=rsp.data
         })
       },
       addSubject(){
@@ -99,7 +87,7 @@
 
       saveRoleBinding(){
 
-        createRoleBinding({metadata:this.metadata,subjects:this.subjects,roleRef:this.roleRef}).then(rsp=>{
+        createClusterRoleBinding({metadata:this.metadata,subjects:this.subjects,roleRef:this.roleRef}).then(rsp=>{
           alert("成功")
         })
       }

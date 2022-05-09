@@ -115,11 +115,19 @@ export const constantRoutes = [
         component: () => import('@/views/rbac/rolebindinglist'),
         meta: { title: '角色绑定', icon: 'tree' },
       },
+
       {
         path: 'createrolebinding',
         name: 'Createrolebinding',
         component: () => import('@/views/rbac/create-rolebinding'),
         meta: { title: '创建角色绑定', icon: 'tree' },
+        hidden: true
+      },
+      {
+        path: 'createclusterrolebinding',
+        name: 'Createclusterrolebinding',
+        component: () => import('@/views/rbac/create-clusterrolebinding'),
+        meta: { title: '创建集群角色绑定', icon: 'tree' },
         hidden: true
       },
       {
@@ -129,10 +137,22 @@ export const constantRoutes = [
         meta: { title: '集群角色列表', icon: 'tree' }
       },
       {
+        path: 'clusterrolebindinglist',
+        name: 'Clusterrolebindinglist',
+        component: () => import('@/views/rbac/clusterrolebindinglist'),
+        meta: { title: '集群角色绑定', icon: 'tree' },
+      },
+      {
         path: 'createrole',
         name: 'Createrole',
         component: () => import('@/views/rbac/create-role'),
-        meta: { title: '创建/编辑角色', icon: 'tree' }
+        meta: { title: '创建/编辑(集群)角色', icon: 'tree' }
+      },
+      {
+        path: 'salist',
+        name: 'Salist',
+        component: () => import('@/views/rbac/salist'),
+        meta: { title: '服务账号列表', icon: 'tree' },
       },
 
 
