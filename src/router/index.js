@@ -69,6 +69,12 @@ export const constantRoutes = [
         meta: { title: 'deployments列表', icon: 'table' }
       },
       {
+        path: 'createdeploy',
+        name: 'Createdeploy',
+        component: () => import('@/views/deployments/deploy-create'),
+        meta: { title: '创建/编辑Deployment', icon: 'table' }
+      },
+      {
         path: 'pods',
         name: 'Pods',
         component: () => import('@/views/workloads/podslist'),
