@@ -2,18 +2,17 @@
   <div>
     <el-card class="box-card" body-style="padding:10px">
       <div slot="header" class="clearfix" >
-        <span>核心设置 <Expand :expand.sync="expand"/>  </span>
+        <span>POD模板 <Expand :expand.sync="expand"/>  </span>
       </div>
       <div v-show="expand">
         <div>
           <el-form   >
-            <el-form-item label="副本数">
-              <el-input-number v-model="spec.replicas"  :min="1" :max="20" label="副本数"></el-input-number>
-              <span v-show="tips">deployment重要特性，来控制正常运行时pod的数量和期望保持一致</span>
+            <el-form-item  >
+              <MetaData labels="true" :data.sync="template.metadata" :tips="tips"/>
             </el-form-item>
-            <MatchLabels :data.sync="spec.selector.matchLabels" :tips="tips"/>
-            <MatchExprs :data.sync="spec.selector.matchExpressions" :tips="tips"/>
-            <TplConfig :data.sync="spec.template" :tips="tips"/>
+            <el-form-item>
+              <Container :data.sync="template.spec.containers" :tips="tips"/>
+            </el-form-item>
           </el-form>
 
         </div>
@@ -24,6 +23,7 @@
 </template>
 <script>
 
+  import {initIfNil} from  "../../utils/helper";
   function copyObject(obj){
     var str=JSON.stringify(obj)
     return JSON.parse(str)
@@ -32,7 +32,7 @@
     props:["data","tips"],
     data(){
       return {
-        spec:{replicas:1,selector:{}, },//
+        template:{metadata:{},spec:{containers:[]},},//
         expand: true,
       }
     },
@@ -46,13 +46,16 @@
     watch:{
       data:{
         handler:function(newVal,oldVal) {
-          this.spec=newVal
+        //  newVal=initIfNil(newVal,"spec.containers",[])
+          this.template=newVal
+
 
         },
         deep: true
       },
-      spec:{
+      template:{
         handler:function(newVal,oldVal) {
+
           this.$emit("update:data",newVal)
         },
         deep: true
@@ -60,9 +63,8 @@
     },
     components:{
       Expand:()=>import("./card-expand.vue"),
-      MatchLabels:()=>import('@/components/Deploy/spec-selector-matchlabels.vue'),
-      MatchExprs:()=>import('@/components/Deploy/spec-selector-matchexprs.vue'),
-      TplConfig:()=>import("./deploy-spec-template.vue"),
+      MetaData:()=>import('./deploy-metadata.vue'),
+      Container:()=>import("./deploy-spec-template-container.vue")
     }
 
 

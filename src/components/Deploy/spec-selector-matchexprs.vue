@@ -23,7 +23,7 @@
     data(){
      return {
        matchExpressions:[],
-
+       store:{_values:[]}
      }
     },
     created(){
@@ -52,6 +52,13 @@
       }
     },
     watch:{
+      data:{
+        handler:function(newVal,oldVal) {
+          this.matchExpressions=newVal
+          this.unParseSlice()
+        },
+        deep: true
+      },
       matchExpressions:{
         handler(newVal,oldVal){
           this.$emit("update:data",newVal)

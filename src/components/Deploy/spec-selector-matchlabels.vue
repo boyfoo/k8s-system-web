@@ -27,9 +27,10 @@
     methods:{
       addSlice(){
         this.matchLabels_array.push({key:'',value:''})
-        this.parseSlice()
+
+       // this.parseSlice()
       },
-      parseSlice(){  //把数据解析为对象
+      parseSlice(){  //把数组解析为对象
         this.matchLabels={}
         this.matchLabels_array.forEach(item=>{
           if(item.key!==''){
@@ -46,6 +47,13 @@
       }
     },
     watch:{
+      data:{
+        handler:function(newVal,oldVal) {
+          this.matchLabels=newVal
+          this.unParseSlice()
+        },
+        deep: true
+      },
       matchLabels:{
         handler(newVal,oldVal){
           this.$emit("update:data",newVal)
