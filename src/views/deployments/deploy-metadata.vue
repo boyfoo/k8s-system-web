@@ -21,7 +21,7 @@
               </el-select>
             </el-form-item>
           </el-form>
-          <el-card class="box-card">
+          <el-card class="box-card" v-show="!fastmod">
             <div slot="header" class="clearfix">
               <span  >标签 <i class="ii el-icon-circle-plus"  @click="addLabel" ></i>  </span>
             </div>
@@ -47,7 +47,7 @@
   }
   export default {
     //labels 代表只显示labels
-    props:["data","tips","labels"],
+    props:["data","tips","labels","fastmod"],
     data(){
       return {
         metadata:{name:'',namespace:'default',labels:{}},//metadata:{name:'',namespace:'default',lables:{},_lables:[]}
