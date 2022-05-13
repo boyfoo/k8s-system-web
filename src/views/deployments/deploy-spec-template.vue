@@ -11,7 +11,11 @@
               <MetaData labels="true" :data.sync="template.metadata" :tips="tips"/>
             </el-form-item>
             <el-form-item>
-              <Container :data.sync="template.spec.containers" :tips="tips"/>
+              <Container defaultname="init" title="Init容器" :data.sync="template.spec.initContainers" :tips="tips"/>
+              <span v-show="tips">(Init 容器是一种特殊容器，在 Pod 内的应用容器启动之前运行)</span>
+            </el-form-item>
+            <el-form-item>
+              <Container defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips"/>
             </el-form-item>
           </el-form>
 
@@ -48,14 +52,11 @@
         handler:function(newVal,oldVal) {
         //  newVal=initIfNil(newVal,"spec.containers",[])
           this.template=newVal
-
-
         },
         deep: true
       },
       template:{
         handler:function(newVal,oldVal) {
-
           this.$emit("update:data",newVal)
         },
         deep: true

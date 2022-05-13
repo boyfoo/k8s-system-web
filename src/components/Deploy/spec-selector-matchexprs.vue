@@ -39,6 +39,9 @@
 
       },
       unParseSlice(){ //编辑状态下，需要把 values  整合成_values(数组变成 ,号分割的字符串)
+        if(this.matchExpressions===undefined){
+          return
+        }
         this.matchExpressions.forEach(item=>{
           item._values=item.values.join(',')
         })
