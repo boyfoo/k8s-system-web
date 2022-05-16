@@ -12,26 +12,29 @@
       }
     },
     created() {
-      if(this.split!==undefined)
-        this.strsplit=this.split
-      if(this.data!==undefined && this.data!=null){{
-        //如果数组里 某一项有空格 ，两头需要加单引号 或双引号
-        this.data.forEach((item,itemindex)=>{
-          if(/\s+/.test(item)){
-            this.data[itemindex]="'"+item+"'"
-          }
-        })
-        this.text=this.data.join(this.strsplit)
-      }
-      }
+      this.initData()
     },
     methods:{
+      initData(){
+        if(this.split!==undefined)
+          this.strsplit=this.split
+        if(this.data!==undefined && this.data!=null){{
+          //如果数组里 某一项有空格 ，两头需要加单引号 或双引号
+          this.data.forEach((item,itemindex)=>{
+            if(/\s+/.test(item)){
+              this.data[itemindex]="'"+item+"'"
+            }
+          })
+          this.text=this.data.join(this.strsplit)
+        }
+        }
+      },
       parseData(){
         //类似 echo -c 'echo The app is running! && sleep 3600'
         //单引号和双引号 里面的内容 不做 split
         var str=this.text
         str=str.replace(/^\s+|\s+$/gm,'')  //实现trim
-        var pattern =/[\"|'](.*?)[\"|']/gi;
+        var pattern =/'(.*?)'|"(.*?)"/gi;
         var mList=str.match(pattern)
         if(!mList || mList.length===0){
           str=str.replace(/\s+/g,' ')
@@ -55,6 +58,7 @@
       }
     },
     watch:{
+
       text:{
         handler(newVal,oldVal){
           this.$emit("update:data",this.parseData())

@@ -15,7 +15,11 @@
               <span v-show="tips">(Init 容器是一种特殊容器，在 Pod 内的应用容器启动之前运行)</span>
             </el-form-item>
             <el-form-item>
-              <Container defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips"/>
+              <Container :fastmod="fastmod" defaultname="container" title="业务容器" :data.sync="template.spec.containers" :tips="tips"/>
+            </el-form-item>
+            <el-form-item v-show="!fastmod">
+              <Schedular :nodeName.sync="template.spec.nodeName" :tips="tips" :nodeSelector.sync="template.spec.nodeSelector"/>
+               <span v-show="tips">(调度设置，包含了节点名称、节点标签选择、节点亲和性等)</span>
             </el-form-item>
           </el-form>
 
@@ -65,7 +69,8 @@
     components:{
       Expand:()=>import("./card-expand.vue"),
       MetaData:()=>import('./deploy-metadata.vue'),
-      Container:()=>import("./deploy-spec-template-container.vue")
+      Container:()=>import("./deploy-spec-template-container.vue"),
+      Schedular:()=>import("./deploy-spec-template-schedular.vue"),
     }
 
 

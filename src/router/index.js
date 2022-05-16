@@ -75,6 +75,13 @@ export const constantRoutes = [
         meta: { title: '创建/编辑Deployment', icon: 'table' }
       },
       {
+        path: 'deploydetail',
+        name: 'Deploydetail',
+        component: () => import('@/views/deployments/deploy-detail'),
+        meta: { title: 'Deployment详细', icon: 'table' },
+        hidden: true
+      },
+      {
         path: 'pods',
         name: 'Pods',
         component: () => import('@/views/workloads/podslist'),
@@ -222,7 +229,7 @@ export const constantRoutes = [
         path: 'createingress',
         name: 'Createingress',
         component: () => import('@/views/ingress/ingress-create'),
-        meta: { title: '创建ingress', icon: 'tree' }
+        meta: { title: '创建/编辑ingress', icon: 'tree' }
       },
       {
         path: 'ingressyaml',

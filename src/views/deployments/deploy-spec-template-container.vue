@@ -55,6 +55,11 @@
                   </el-form>
                   <span v-show="tips">参数（好比docker的command)</span>
                 </el-form-item>
+
+                <el-form-item  label="健康检查配置" v-show="!fastmod" style="width: 100%;margin-top: 20px">
+                   <Liveness :data.sync="item.livenessProbe" :tips="tips" title="存活检查"/>
+                  <Liveness :data.sync="item.readinessProbe" style="margin-top: 10px" :tips="tips" title="就绪检查"/>
+                 </el-form-item>
               </el-form>
             </el-form-item>
 
@@ -70,7 +75,7 @@
   import {images} from "@/utils/vars";
 
   export default {
-    props:["data","tips","title","defaultname"],
+    props:["data","tips","title","defaultname","fastmod"],
     data(){
       return {
         containers:[],//
@@ -82,6 +87,7 @@
       this.images=images
     },
     methods:{
+
       getDefaultName(t,cindex){
           if(t===1){ //代表是容器 ,这不考虑cindex
             return this.defaultname+this.containers.length
@@ -108,9 +114,11 @@
     components:{
       Expand:()=>import("./card-expand.vue"),
       MetaData:()=>import('./deploy-metadata.vue'),
-      ArrayInput:()=>import("@/components/Common/ArrayInput")
+      ArrayInput:()=>import("@/components/Common/ArrayInput"),
+      Liveness:()=>import("@/components/Deploy/container-liveness"),
     }
 
 
   }
 </script>
+
